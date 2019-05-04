@@ -4,31 +4,31 @@ describe('Table Test', function() {
   it('Check table element', function() {
     cy.visit('http://localhost:8081')
 
-    const TEAM_IDX = 0
-    const POINTS_IDX = 2
-    const LENGTH = 3
+    const TDA_TEAM_IDX = 0
+    const TDA_POINTS_IDX = 1
+    const TDA_LENGTH = 2
 
     const table = {}
 
-    let ix = 0
     let team = ""
-    cy.get('tbody td').each(($td) => {
-      cy.log($td.text())
-      if (ix % LENGTH == TEAM_IDX) {
-        team = $td.text()
-      }
+    for (let ix = 0; ix < 3; ix++) {
+      cy.get('tbody td a').eq(ix*TDA_LENGTH+TDA_TEAM_IDX).then(($teamCell) => {
+        cy.log($teamCell.attr('alt'))
+        team = $teamCell.attr('alt')
+      })
 
-      if (ix % LENGTH == POINTS_IDX) {
+      cy.get('tbody td a').eq(ix*TDA_LENGTH+TDA_POINTS_IDX).then(($pointsCell) => {
+        let points = Number($pointsCell.text())
+        cy.log(points)
+        
         if (team in table) {
-          table[team] += Number($td.text())
+          table[team] += points
         } else {
-          table[team] = Number($td.text())
+          table[team] = points
         }
-      }
+      })
+    }
 
-      ix += 1
-    })
-
-  cy.log(table)
+    cy.log(table)
   })  
 })
